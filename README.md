@@ -23,6 +23,16 @@ Mesečni strošek za ravnanje z odpadki za štirinajst minimalnih vnosov (šestk
 odpadkov in osemkrat BIO odpadki) skupaj z DDV znaša 15,95 €.
 ```
 
+Here's a funny ChatGPT translation for your enjoyment as well:
+
+```txt
+The thrilling price for one entry of leftover trash is a whopping €2.4809 — truly a bargain!
+Meanwhile, the oh-so-precious BIO waste will only set you back €0.1335 per entry.
+Now, if you’re feeling extra generous and go for fourteen minimum entries a month (six times
+the glamorous leftover trash and eight times the fabulous BIO waste), your grand total
+with VAT will be a mere €15.95. What a steal for dealing with your garbage royalty-style!
+```
+
 ## 🐳 Running the app using Docker
 
 Create a docker container using:
