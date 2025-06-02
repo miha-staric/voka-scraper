@@ -18,7 +18,9 @@ Note that BIO is Biological trash and MKO is Mixed trash (mešani komunalni odpa
 The following was taken from the website on 2. 6. 2025, so the current prices may be higher!
 
 ```txt
-Cena enega vnosa preostanka odpadkov je 2,4809 €, cena enega vnosa BIO odpadkov pa 0,1335 €. Mesečni strošek za ravnanje z odpadki za štirinajst minimalnih vnosov (šestkrat preostanek odpadkov in osemkrat BIO odpadki) skupaj z DDV znaša 15,95 €.
+Cena enega vnosa preostanka odpadkov je 2,4809 €, cena enega vnosa BIO odpadkov pa 0,1335 €.
+Mesečni strošek za ravnanje z odpadki za štirinajst minimalnih vnosov (šestkrat preostanek
+odpadkov in osemkrat BIO odpadki) skupaj z DDV znaša 15,95 €.
 ```
 
 ## 🐳 Running the app using Docker
