@@ -38,5 +38,9 @@ docker run --rm voka-scraper
 You should, of course, override individual config settings using the following command syntax:
 
 ```bash
-docker run --rm -e date_from='01.01.2025' -e date_to='31.01.2025' -e chip_card_number='{your_chip_card_number} -e password='{your_chip_card_password}' voka-scraper
+docker run --rm -e date_from='01.01.2025' \
+  -e date_to='31.01.2025' \
+  -e chip_card_number='{your_chip_card_number}' \
+  -e password='{your_chip_card_password}' \
+  voka-scraper
 ```
