@@ -11,4 +11,4 @@ date_from           = "01.06.2025"
 date_to             = "30.06.2025"
 
 [ output ]
-mode                = "default" # default | months
+mode                = "default" # default | months | years

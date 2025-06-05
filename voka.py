@@ -96,6 +96,15 @@ def handle_months_printing(dumping_data):
     print('Months data:')
     print(monthly_summary)
 
+def handle_years_printing(dumping_data):
+    dumping_data['dumpedAtDate'] = pd.to_datetime(dumping_data['dumpedAtDate'])
+    dumping_data['year'] = dumping_data['dumpedAtDate'].dt.to_period('Y')
+    yearly_summary = dumping_data.groupby(['year', 'fraction'])['quantity'].sum().reset_index()
+    yearly_summary['month'] = yearly_summary['year'].astype(str)
+
+    print('Years data:')
+    print(yearly_summary)
+
 def handle_default_printing(dumping_data):
     print('Full data:')
     print(dumping_data)
@@ -114,7 +123,8 @@ def print_dumping_data(dumping_data):
     mode = config['output']['mode']
     dispatch = {
         'default': handle_default_printing,
-        'months': handle_months_printing
+        'months': handle_months_printing,
+        'years': handle_years_printing
     }
     pd.set_option('display.width', 1000)
     pd.set_option('display.max_columns', None)
