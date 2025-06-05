@@ -5,7 +5,7 @@
 
 Scraper for VoKa underground garbage cans
 
-![VoKa Scraper](images/voka-scraper.png)
+![VoKa Scraper in action](https://github.com/user-attachments/assets/5aecb023-7c88-4293-be20-1ef91d82450a)
 
 ## 🗑️ Dumpings
 
