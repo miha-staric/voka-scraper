@@ -1,40 +1,27 @@
 # POST: https://potko.ekoplus.si/vs_uporabniki/login
 # GET: https://potko.ekoplus.si/vs_uporabniki/dashboard
 
+from bs4 import BeautifulSoup
 import json
 import os
+import pandas as pd
 import requests
 import toml
 import urllib
 
-from bs4 import BeautifulSoup
-
-class Dumpings:
-    mko_count = int(0)
-    bio_count = int(0)
-
-    def __init__(self, mko_count, bio_count):
-        self.mko_count = mko_count
-        self.bio_count = bio_count
-
-    def __eq__(self, other):
-        return self.mko_count == other.mko_count and \
-               self.bio_count == other.bio_count
-
 def error_report(error_message: str):
     raise Exception(error_message)
 
-def parse_json_dumping_data(json_data, chip_card_number) -> Dumpings:
-    dumpings_data = Dumpings(0, 0)
+def parse_json_dumping_data(json_data, chip_card_number) -> pd.DataFrame:
     json_data = json.loads(json_data)
-    dumpings = json_data['props']['dumpings']['dumpings']
-    for dumping in dumpings:
-        if dumping['chipNumber'] == chip_card_number:
-            if dumping['fraction'] == 'MKO':
-                dumpings_data.mko_count += dumping['quantity']
-            elif dumping['fraction'] == 'BIO':
-                dumpings_data.bio_count += dumping['quantity']
-    return dumpings_data
+
+    # Get the "dumpings" data and convert to a DataFrame
+    dumpings_df = pd.DataFrame(json_data['props']['dumpings']['dumpings'])
+
+    # Get the "dumpings" data and convert to a DataFrame
+    dumpings_df = pd.DataFrame(json_data['props']['dumpings']['dumpings'])
+
+    return dumpings_df
 
 def parse_x_inertia_version(html_data) -> str:
     soup = BeautifulSoup(html_data, 'html.parser')
@@ -46,7 +33,7 @@ def parse_xsrf_token(cookies) -> str:
     xsrf_token = urllib.parse.unquote(cookies['XSRF-TOKEN']) # This fixes the '%3D' encoding of '='
     return xsrf_token
 
-def get_dumping_data() -> Dumpings:
+def get_dumping_data() -> pd.DataFrame:
     post_headers = {
         'X-Inertia': 'true',
         'X-Inertia-Version': '',
@@ -95,22 +82,36 @@ def process_config():
     # Insert spaces after dots in dates (silly API developers)
     config['dates']['date_from'] = config['dates']['date_from'].replace(".", ". ")
     config['dates']['date_to'] = config['dates']['date_to'].replace(".", ". ")
-        
-def print_dumping_data(data, date_from, date_to):
-    if data is None:
-        print('No data retrieved')
-        return
 
-    print('For dates between', date_from, 'and', date_to)
-    print('MKO:', data.mko_count, '\nBIO:', data.bio_count)
-        
 def main():
     with open('config.toml', 'r') as file:
         global config
         config = toml.load(file)
+
+        print('For dates between', config['dates']['date_from'], 'and', config['dates']['date_to'])
+        print('\n')
+
         process_config()
-        data = get_dumping_data()
-        print_dumping_data(data, config['dates']['date_from'], config['dates']['date_to'])
+        dumping_data = get_dumping_data()
+
+        if dumping_data is None:
+            print('No data retrieved')
+            return
+
+        print('Full data:')
+        pd.set_option('display.width', 1000)
+        pd.set_option('display.max_columns', None)
+        print(dumping_data)
+
+        print('\nSummarized data:')
+        pivot_summary = dumping_data.pivot_table(
+            values='quantity',
+            index=None,
+            columns='fraction',
+            aggfunc='sum',
+            fill_value=0
+        )
+        print(pivot_summary)
 
 if __name__ == "__main__":
     main()
