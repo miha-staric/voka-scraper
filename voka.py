@@ -17,9 +17,7 @@ def parse_json_dumping_data(json_data, chip_card_number) -> pd.DataFrame:
 
     # Get the "dumpings" data and convert to a DataFrame
     dumpings_df = pd.DataFrame(json_data['props']['dumpings']['dumpings'])
-
-    # Get the "dumpings" data and convert to a DataFrame
-    dumpings_df = pd.DataFrame(json_data['props']['dumpings']['dumpings'])
+    dumpings_df = dumpings_df.drop(columns=['chipNumber'])
 
     return dumpings_df
 
