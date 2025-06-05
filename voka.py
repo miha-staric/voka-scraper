@@ -17,7 +17,12 @@ def parse_json_dumping_data(json_data, chip_card_number) -> pd.DataFrame:
 
     # Get the "dumpings" data and convert to a DataFrame
     dumpings_df = pd.DataFrame(json_data['props']['dumpings']['dumpings'])
-    dumpings_df = dumpings_df.drop(columns=['chipNumber'])
+    dumpings_df.drop(columns=['chipNumber'], inplace=True)
+
+    # Fix for the error in the VoKa database
+    dumpings_df['fraction'] = dumpings_df['fraction'].replace({
+        'common.REST 2': 'MKO'
+    })
 
     return dumpings_df
 
@@ -76,10 +81,44 @@ def process_config():
     config['dates']['date_to'] = os.getenv('date_to', config['dates']['date_to'])
     config['card']['chip_card_number'] = os.getenv('chip_card_number', config['card']['chip_card_number'])
     config['card']['password'] = os.getenv('password', config['card']['password'])
+    config['output']['mode'] = os.getenv('mode', config['output']['mode'])
 
     # Insert spaces after dots in dates (silly API developers)
     config['dates']['date_from'] = config['dates']['date_from'].replace(".", ". ")
     config['dates']['date_to'] = config['dates']['date_to'].replace(".", ". ")
+
+def handle_months_printing(dumping_data):
+    dumping_data['dumpedAtDate'] = pd.to_datetime(dumping_data['dumpedAtDate'])
+    dumping_data['month'] = dumping_data['dumpedAtDate'].dt.to_period('M')
+    monthly_summary = dumping_data.groupby(['month', 'fraction'])['quantity'].sum().reset_index()
+    monthly_summary['month'] = monthly_summary['month'].astype(str)
+
+    print('Months data:')
+    print(monthly_summary)
+
+def handle_default_printing(dumping_data):
+    print('Full data:')
+    print(dumping_data)
+
+    print('\nSummarized data:')
+    pivot_summary = dumping_data.pivot_table(
+        values='quantity',
+        index=None,
+        columns='fraction',
+        aggfunc='sum',
+        fill_value=0
+    )
+    print(pivot_summary)
+
+def print_dumping_data(dumping_data):
+    mode = config['output']['mode']
+    dispatch = {
+        'default': handle_default_printing,
+        'months': handle_months_printing
+    }
+    pd.set_option('display.width', 1000)
+    pd.set_option('display.max_columns', None)
+    dispatch.get(mode, handle_default_printing)(dumping_data)
 
 def main():
     with open('config.toml', 'r') as file:
@@ -96,20 +135,7 @@ def main():
             print('No data retrieved')
             return
 
-        print('Full data:')
-        pd.set_option('display.width', 1000)
-        pd.set_option('display.max_columns', None)
-        print(dumping_data)
-
-        print('\nSummarized data:')
-        pivot_summary = dumping_data.pivot_table(
-            values='quantity',
-            index=None,
-            columns='fraction',
-            aggfunc='sum',
-            fill_value=0
-        )
-        print(pivot_summary)
+        print_dumping_data(dumping_data)
 
 if __name__ == "__main__":
     main()
