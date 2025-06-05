@@ -9,16 +9,22 @@ Scraper for VoKa underground garbage cans
 
 ![VoKa Scraper in action](https://github.com/user-attachments/assets/6967ed5a-d30e-40a2-96d1-0c9bbd7ff6da)
 
-## 🗑️ Dumpings
+## 📘 Background
 
-To quote the VoKa's webpage at <https://www.mojiodpadki.si/odpadki/podzemne-zbiralnice>, the fixed dumpings included in the price are:
+Ljubljana, the capital of Slovenia, has recently built a network of underground garbage bins, managed by the city's waste disposal company VoKa Snaga. These bins are aimed at enhancing urban cleanliness and sustainability and are installed primarily in the city center. The units replace traditional street-level bins, reducing visual clutter and improving public space aesthetics. The system comprises numerous underground collection units, each serving multiple waste categories, including glass, paper, and packaging, which are free to use, while biological and residual waste need to be charged for.
+
+Residents and businesses access the units for mixed and biological trash using a special RFID card. Each of these cards has its own `chip card number` and a `password` which one can use to check the number of disposals that have been made on their account. The official website for checking the disposal data leaves much to be desired. This is why the author of `voka-scraper` decided to take the matter in his own hands and build this user-friendly script to skip the not-so-pleasant web interface.
+
+## 🗑️ Disposals
+
+To quote the VoKa's webpage at <https://www.mojiodpadki.si/odpadki/podzemne-zbiralnice>, the fixed disposals included in the price are:
 
 BIO: 8x
 MKO: 6x
 
-The price for extra BIO dumping is 0.1335 EUR and for MKO dumping 2.4809 EUR.
+The price for extra BIO disposal is 0.1335 EUR and for MKO disposal 2.4809 EUR.
 
-Note that BIO is Biological trash and MKO is Mixed trash (mešani komunalni odpadki).
+Note that BIO is Biological trash and MKO is Residual trash (mešani komunalni odpadki).
 
 The following was taken from the website on 2. 6. 2025, so the current prices may be higher!
 
