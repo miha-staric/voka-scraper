@@ -15,6 +15,8 @@ Ljubljana, the capital of Slovenia, has recently built a network of underground 
 
 Residents and businesses access the units for mixed and biological trash using a special RFID card. Each of these cards has its own `chip card number` and a `password` which one can use to check the number of disposals that have been made on their account. The official website for checking the disposal data leaves much to be desired. This is why the author of `voka-scraper` decided to take the matter in his own hands and build this user-friendly script to skip the not-so-pleasant web interface.
 
+![VoKa Underground Bins With Trash Around](https://github.com/user-attachments/assets/500d6110-6a88-46d7-af7b-dd0d9505556a)
+
 ## 🗑️ Disposals
 
 To quote the VoKa's webpage at <https://www.mojiodpadki.si/odpadki/podzemne-zbiralnice>, the fixed disposals included in the price are:
