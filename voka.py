@@ -13,7 +13,15 @@ def error_report(error_message: str):
     raise Exception(error_message)
 
 def parse_json_dumping_data(json_data, chip_card_number) -> pd.DataFrame:
-    json_data = json.loads(json_data)
+    try:
+      json_data = json.loads(json_data)
+    except json.JSONDecodeError:
+      raise ValueError("Invalid JSON response")
+    if 'props' not in json_data or 'dumpings' not in json_data['props']:
+      raise ValueError("Response JSON missing required keys 'props' or 'dumpings'")
+    dumpings = json_data['props']['dumpings']['dumpings']
+    if not isinstance(dumpings, list) or len(dumpings) == 0:
+      raise ValueError("'dumpings' must be a non-empty list")
 
     # Get the "dumpings" data and convert to a DataFrame
     dumpings_df = pd.DataFrame(json_data['props']['dumpings']['dumpings'])
