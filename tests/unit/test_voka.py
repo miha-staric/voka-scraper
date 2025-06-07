@@ -1,8 +1,24 @@
-import unittest
+from voka import parse_json_dumping_data, parse_x_inertia_version, parse_xsrf_token
 import json
+import pandas as pd
+import pandas.testing as pdt
 import pathlib
 import pytest
-from voka import Dumpings, parse_json_data, parse_x_inertia_version, parse_xsrf_token
+import unittest
+
+def get_mocked_dumping_data():
+        data = {
+                'dumpedAtDate': ['2024-10-17', '2024-10-12', '2024-10-17'],
+                'dumpedAtTime': ['10:17', '18:27', '10:17'],
+                'fraction': ['BIO', 'MKO', 'MKO'],
+                'quantity': [1, 1, 1],
+                'location': [
+                        'MIHORJEVA CESTA  1    LJUBLJANA',
+                        'MIHORJEVA CESTA  1    LJUBLJANA',
+                        'MIHORJEVA CESTA  1    LJUBLJANA'
+                ]
+        }
+        return pd.DataFrame(data)
 
 class TestParsingFunctions(unittest.TestCase):
     def test_json_parsing(self):
@@ -10,8 +26,9 @@ class TestParsingFunctions(unittest.TestCase):
         file = pathlib.Path('tests/unit/test_data/json_data.json')
         with open(file) as f:
             input_data = f.read()
-        dumpings_data = Dumpings(2, 1)
-        self.assertEqual(parse_json_data(input_data, chip_card_number), dumpings_data)
+        expected_data = get_mocked_dumping_data()
+        actual_data = parse_json_dumping_data(input_data, chip_card_number)
+        pdt.assert_frame_equal(actual_data, expected_data)
 
     def test_x_inertia_parsing(self):
         x_inertia_version = '6666cd76f96956469e7be39d750cc7d9'
