@@ -46,6 +46,21 @@ Now, if you’re feeling extra generous and go for fourteen minimum entries a mo
 the glamorous leftover trash and eight times the fabulous BIO waste), your grand total
 with VAT will be a mere €15.95. What a steal for dealing with your garbage royalty-style!
 ```
+## 🖨️ Output options
+
+You have three different modes of output to choose from, `default`, `months`, and `years`.
+
+### 🧻 Default Mode
+
+The default mode displays all the data of each of the dumpings between two dates, together with the location and time.
+
+### 🗓️ Months Mode
+
+This one is the most useful, as it groups the data to particular months for the period between two exact dates and also adds the columns of `real_cost` and `total_cost`. The `real_cost` is the sum of all the particular dumpings (either BIO or MKO), multiplied by the price for each type of dumping. The `total_cost` is the actual cost that you are supposed to pay for the dumpings, because the system has a minimum set of each of the dumpings already included in the monthly bill, so if you don't use all the included dumpings, you still pay the minimum cost, whereas if you make extra dumpings per month, those will be paid on top.
+
+### ⌛ Years Mode
+
+This mode groups all the BIO and MKO dumpings made in a particular date for the period between the two exact dates. Nothing special, but shows you how many trash you have produced in that timeframe.
 
 ## 🐳 Running the app using Docker
 
