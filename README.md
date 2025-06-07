@@ -1,9 +1,9 @@
 # 🗑️🪰 voka-scraper
 
 ![GitHub release (latest by tag)](https://img.shields.io/github/v/release/miha-staric/voka-scraper)
-![License](https://img.shields.io/github/license/miha-staric/voka-scraper)
-![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-blue)
 ![Language](https://img.shields.io/badge/language-Python-blue)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-blue)
+![License](https://img.shields.io/github/license/miha-staric/voka-scraper)
 
 Scraper for VoKa underground garbage cans
 
