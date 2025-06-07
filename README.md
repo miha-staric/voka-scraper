@@ -68,6 +68,8 @@ docker run --rm \
   -e date_to='31.01.2025' \
   -e chip_card_number='{your_chip_card_number}' \
   -e password='{your_chip_card_password}' \
-  -e mode='default'
+  -e mode='default' \
+  -e min_bio=1.068 \
+  -e min_mko=14.8854 \
   voka-scraper
 ```
