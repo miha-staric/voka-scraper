@@ -17,6 +17,8 @@ def parse_json_dumping_data(json_data, chip_card_number) -> pd.DataFrame:
 
     # Get the "dumpings" data and convert to a DataFrame
     dumpings_df = pd.DataFrame(json_data['props']['dumpings']['dumpings'])
+
+    # Delete the chipNumber column
     dumpings_df.drop(columns=['chipNumber'], inplace=True)
 
     # Fix for the error in the VoKa database
@@ -82,6 +84,10 @@ def process_config():
     config['card']['chip_card_number'] = os.getenv('chip_card_number', config['card']['chip_card_number'])
     config['card']['password'] = os.getenv('password', config['card']['password'])
     config['output']['mode'] = os.getenv('mode', config['output']['mode'])
+    config['cost']['bio'] = os.getenv('bio', config['cost']['bio'])
+    config['cost']['mko'] = os.getenv('mko', config['cost']['mko'])
+    config['cost']['min_bio'] = os.getenv('min_bio', config['cost']['min_bio'])
+    config['cost']['min_mko'] = os.getenv('min_mko', config['cost']['min_mko'])
 
     # Insert spaces after dots in dates (silly API developers)
     config['dates']['date_from'] = config['dates']['date_from'].replace(".", ". ")
@@ -89,21 +95,104 @@ def process_config():
 
 def handle_months_printing(dumping_data):
     dumping_data['dumpedAtDate'] = pd.to_datetime(dumping_data['dumpedAtDate'])
-    dumping_data['month'] = dumping_data['dumpedAtDate'].dt.to_period('M')
-    monthly_summary = dumping_data.groupby(['month', 'fraction'])['quantity'].sum().reset_index()
-    monthly_summary['month'] = monthly_summary['month'].astype(str)
+    dumping_data['month'] = dumping_data['dumpedAtDate'].dt.to_period('M').astype(str)
+
+    # Group by month and fraction summing quantity
+    grouped = dumping_data.groupby(['month', 'fraction']).agg(
+        quantity=('quantity', 'sum')
+    ).reset_index()
+
+    # Ensure every month has both fractions present
+    months = grouped['month'].unique()
+    fractions = ['BIO', 'MKO']
+
+    # Create full index as cartesian product of months x fractions
+    full_index = pd.MultiIndex.from_product([months, fractions], names=['month', 'fraction'])
+
+    # Reindex grouped DataFrame to full index, filling missing quantities with 0
+    grouped = grouped.set_index(['month', 'fraction']).reindex(full_index, fill_value=0).reset_index()
+
+    # Costs map from config
+    cost_map = {
+        'BIO': float(config['cost']['bio']),
+        'MKO': float(config['cost']['mko'])
+    }
+
+    # Calculate real cost per fraction per row
+    grouped['real_cost_fraction'] = grouped.apply(
+        lambda row: row['quantity'] * cost_map.get(row['fraction'], 0),
+        axis=1
+    )
+
+    # Minimum cost thresholds
+    min_costs = {
+        'BIO': float(config['cost']['min_bio']),
+        'MKO': float(config['cost']['min_mko'])
+    }
+
+    # Apply minimum cost per fraction per row
+    grouped['total_cost_fraction'] = grouped.apply(
+        lambda row: max(row['real_cost_fraction'], min_costs.get(row['fraction'], 0)),
+        axis=1
+    )
+
+    # Sum costs by month
+    real_costs = grouped.groupby('month')['real_cost_fraction'].sum().reset_index(name='real_cost')
+    total_costs = grouped.groupby('month')['total_cost_fraction'].sum().reset_index(name='total_cost')
+
+    # Pivot quantities to columns BIO and MKO as integers
+    quantities = grouped.pivot_table(
+        index='month', columns='fraction', values='quantity', aggfunc='sum', fill_value=0
+    ).reset_index()
+    quantities[['BIO', 'MKO']] = quantities[['BIO', 'MKO']].astype(int)
+
+    # Merge quantities with cost summaries
+    final_df = pd.merge(quantities, real_costs, on='month')
+    final_df = pd.merge(final_df, total_costs, on='month')
 
     print('Months data:')
-    print(monthly_summary)
+    print(final_df)
+
+def compute_total_cost(group):
+    min_costs = {'BIO': config['cost']['min_bio'], 'MKO': config['cost']['min_mko']}
+    total = 0
+    for frac in ['BIO', 'MKO']:
+        qty = group[group['fraction'] == frac]['quantity'].sum()
+        cost = group[group['fraction'] == frac]['cost'].max()  # Use actual cost if higher
+        cost = max(cost, min_costs[frac])  # Enforce minimum
+        total += qty * cost
+    return total
 
 def handle_years_printing(dumping_data):
+    # Ensure date column is datetime
     dumping_data['dumpedAtDate'] = pd.to_datetime(dumping_data['dumpedAtDate'])
-    dumping_data['year'] = dumping_data['dumpedAtDate'].dt.to_period('Y')
+    
+    # Extract year period as string
+    dumping_data['year'] = dumping_data['dumpedAtDate'].dt.to_period('Y').astype(str)
+    
+    # Group by year and fraction and sum quantities
     yearly_summary = dumping_data.groupby(['year', 'fraction'])['quantity'].sum().reset_index()
-    yearly_summary['month'] = yearly_summary['year'].astype(str)
+    
+    # Pivot so fractions become columns, fill missing with 0
+    pivot = yearly_summary.pivot_table(
+        index='year',
+        columns='fraction',
+        values='quantity',
+        aggfunc='sum',
+        fill_value=0
+    ).reset_index()
+    
+    # Optional: convert quantity columns to int if all values are integer-like
+    for col in ['BIO', 'MKO']:
+        if col in pivot.columns:
+            pivot[col] = pivot[col].astype(int)
+        else:
+            # If a fraction column is missing (e.g. no MKO data), add it with zeros
+            pivot[col] = 0
 
-    print('Years data:')
-    print(yearly_summary)
+    pivot.columns.name = None
+    print("Years data:")
+    print(pivot)
 
 def handle_default_printing(dumping_data):
     print('Full data:')

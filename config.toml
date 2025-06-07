@@ -12,3 +12,9 @@ date_to             = "30.06.2025"
 
 [ output ]
 mode                = "default" # default | months | years
+
+[ cost ]
+bio                 = 0.1335
+mko                 = 2.4809
+min_bio             = 1.068
+min_mko             = 14.8854
