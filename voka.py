@@ -206,7 +206,7 @@ def handle_default_printing(dumping_data):
     print('Full data:')
     print(dumping_data)
 
-    print('\nSummarized data:')
+    print('Summarized data:')
     pivot_summary = dumping_data.pivot_table(
         values='quantity',
         index=None,
@@ -233,7 +233,6 @@ def main():
         config = toml.load(file)
 
         print('For dates between', config['dates']['date_from'], 'and', config['dates']['date_to'])
-        print('\n')
 
         process_config()
         dumping_data = get_dumping_data()
