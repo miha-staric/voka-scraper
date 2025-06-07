@@ -7,7 +7,8 @@
 
 Scraper for VoKa underground garbage cans
 
-![VoKa Scraper in action](https://github.com/user-attachments/assets/6967ed5a-d30e-40a2-96d1-0c9bbd7ff6da)
+![VoKa Scraper in Action](https://github.com/user-attachments/assets/788511e0-59e0-4036-8ca6-dfe36d173e47)
+
 
 ## 📘 Background
 
