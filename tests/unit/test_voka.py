@@ -1,9 +1,7 @@
 from voka import parse_json_dumping_data, parse_x_inertia_version, parse_xsrf_token
-import json
 import pandas as pd
 import pandas.testing as pdt
 import pathlib
-import pytest
 import unittest
 
 def get_mocked_dumping_data():
