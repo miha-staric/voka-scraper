@@ -12,6 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application files
 COPY voka.py config.toml ./
+COPY scraper/ scraper/
+COPY config/ config/
 
 # Set default command
 CMD ["python", "voka.py"]
