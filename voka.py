@@ -12,7 +12,7 @@ import urllib
 def error_report(error_message: str):
     raise Exception(error_message)
 
-def parse_json_dumping_data(json_data, chip_card_number) -> pd.DataFrame:
+def parse_json_dumping_data(json_data) -> pd.DataFrame:
     try:
       json_data = json.loads(json_data)
     except json.JSONDecodeError:
@@ -83,7 +83,7 @@ def get_dumping_data() -> pd.DataFrame:
         if response.status_code != 200:
             error_report('second GET request problem, status returned ' + str(response.status_code))
 
-    return parse_json_dumping_data(response.text, config['card']['chip_card_number'])
+    return parse_json_dumping_data(response.text)
 
 def process_config():
     # Override with env vars if present
