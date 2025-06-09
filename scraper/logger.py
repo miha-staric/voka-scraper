@@ -1,4 +1,5 @@
 from config import config
+from logging.handlers import RotatingFileHandler
 import logging
 import os
 
@@ -16,7 +17,8 @@ logger.addHandler(console_handler)
 # File handler
 log_dir = "logs"
 os.makedirs(log_dir, exist_ok=True)
-file_handler = logging.FileHandler(f"{log_dir}/scraper.log")
+file_handler = RotatingFileHandler(
+    f"{log_dir}/scraper.log", maxBytes=1_000_000, backupCount=3
+)
 file_handler.setFormatter(formatter)
-
 logger.addHandler(file_handler)
