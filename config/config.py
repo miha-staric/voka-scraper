@@ -17,3 +17,4 @@ MIN_BIO = os.getenv('min_bio', config['cost']['min_bio'])
 MIN_MKO = os.getenv('min_mko', config['cost']['min_mko'])
 LOGIN_URL = config['server']['login_url']
 DASHBOARD_URL_BASE = config['server']['dashboard_url_base']
+LOG_LEVEL = os.getenv('log_level', config['logging']['level']).upper()

@@ -86,5 +86,6 @@ docker run --rm \
   -e mode='default' \
   -e min_bio=1.068 \
   -e min_mko=14.8854 \
+  -e log_level="INFO" \
   voka-scraper
 ```

@@ -37,6 +37,8 @@ def main():
         logger.error(f'Login failed: {e}', exc_info=True)
         return
 
+    logger.debug(f'Login succeeded for {config.CHIP_CARD_NUMBER}.')
+
     try:
         dumping_data = fetch_dumping_data(login_data.session, login_data.post_headers, config.DATE_FROM, config.DATE_TO)
     except DataFetchError as e:
@@ -47,8 +49,10 @@ def main():
         return
 
     if dumping_data is None:
-        print('No data retrieved')
+        logger.error('No data retrieved.')
         return
+
+    logger.debug(f'Data retrieved for params date_from:{config.DATE_FROM}, date_to:{config.DATE_TO}.')
 
     print_dumping_data(dumping_data)
 
