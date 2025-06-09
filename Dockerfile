@@ -11,7 +11,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application files
-COPY voka.py config.toml ./
+COPY voka.py ./voka.py
+COPY config.example.toml ./config.toml
 COPY scraper/ scraper/
 COPY config/ config/
 
