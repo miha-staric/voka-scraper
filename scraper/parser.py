@@ -36,4 +36,7 @@ def parse_voka_json(json_data) -> pd.DataFrame:
       'common.REST 2': 'MKO'
   })
 
+  # Fix multiple spaces in location names in the VoKa database
+  dumpings_df['location'] = dumpings_df['location'].str.split().str.join(" ")
+
   return dumpings_df
