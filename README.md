@@ -45,6 +45,7 @@ Now, if you’re feeling extra generous and go for fourteen minimum entries a mo
 the glamorous leftover trash and eight times the fabulous BIO waste), your grand total
 with VAT will be a mere €15.95. What a steal for dealing with your garbage royalty-style!
 ```
+
 ## 🖨️ Output options
 
 You have three different modes of output to choose from, `default`, `months`, and `years`.
@@ -60,6 +61,14 @@ This one is the most useful, as it groups the data to particular months for the 
 ### ⌛ Years Mode
 
 This mode groups all the BIO and MKO dumpings made in a particular date for the period between the two exact dates. Nothing special, but shows you how many trash you have produced in that timeframe.
+
+## 🔧 Configuration
+
+Copy the example config and fill in your credentials:
+
+```bash
+cp config.example.toml config.toml
+```
 
 ## 🐳 Running the app using Docker
 

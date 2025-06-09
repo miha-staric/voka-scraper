@@ -1,13 +1,13 @@
 [ card ]
-chip_card_number    = "{enter_your_own_chip_card_number_in_config}"
-password            = "{enter_your_own_chip_card_password}"
+chip_card_number    = "{insert-your-chip-card-number}"
+password            = "{insert-your-password}"
 
 [ server ]
 login_url           = "https://potko.ekoplus.si/vs_uporabniki/login"
 dashboard_url_base  = "https://potko.ekoplus.si/vs_uporabniki/dashboard"
 
 [ dates ]
-date_from           = "01.06.2025"
+date_from           = "01.01.2025"
 date_to             = "30.06.2025"
 
 [ output ]
