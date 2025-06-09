@@ -1,10 +1,16 @@
-from voka import parse_json_dumping_data, parse_x_inertia_version, parse_xsrf_token
+from scraper.auth import parse_x_inertia_version
+from scraper.parser import parse_json_dumping_data
 import pandas as pd
 import pandas.testing as pdt
 import pathlib
 import unittest
 
 def get_mocked_dumping_data():
+        """Returns mock data that is the representation of the test_data/json_data.json
+
+        Returns:
+            DataFrame: Pandas DataFrame object from the json data
+        """
         data = {
                 'dumpedAtDate': ['2024-10-17', '2024-10-12', '2024-10-17'],
                 'dumpedAtTime': ['10:17', '18:27', '10:17'],
@@ -20,12 +26,11 @@ def get_mocked_dumping_data():
 
 class TestParsingFunctions(unittest.TestCase):
     def test_json_parsing(self):
-        chip_card_number = '0000001'
         file = pathlib.Path('tests/unit/test_data/json_data.json')
         with open(file) as f:
             input_data = f.read()
         expected_data = get_mocked_dumping_data()
-        actual_data = parse_json_dumping_data(input_data, chip_card_number)
+        actual_data = parse_json_dumping_data(input_data)
         pdt.assert_frame_equal(actual_data, expected_data)
 
     def test_x_inertia_parsing(self):
