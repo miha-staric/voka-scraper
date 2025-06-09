@@ -4,10 +4,18 @@
 from config import config
 from scraper.auth import login
 from scraper.data_fetcher import fetch_dumping_data
+from scraper.exceptions import AuthenticationError, DataFetchError
+from scraper.logger import logger
 from scraper.output import handle_default_printing, handle_months_printing, handle_years_printing
 import pandas as pd
 
-def print_dumping_data(dumping_data):
+def print_dumping_data(dumping_data: pd.DataFrame):
+    """
+    Prints dumping data according to the selected mode.
+
+    Args:
+        dumping_data (DataFrame): Dumping data in pandas DataFrame format.
+    """
     mode = config.MODE
     dispatch = {
         'default': handle_default_printing,
@@ -19,15 +27,27 @@ def print_dumping_data(dumping_data):
     dispatch.get(mode, handle_default_printing)(dumping_data)
 
 def main():
-        print('For dates between', config.DATE_FROM, 'and', config.DATE_TO)
+    """
+    Main function for VoKa Scraper
+    """
+    print('For dates between', config.DATE_FROM, 'and', config.DATE_TO)
+    try:
         login_data = login(config.CHIP_CARD_NUMBER, config.PASSWORD, config.LOGIN_URL)
-        dumping_data = fetch_dumping_data(login_data[0], login_data[1])
+    except AuthenticationError as e:
+        logger.error(f'Login failed: {e}', exc_info=True)
 
-        if dumping_data is None:
-            print('No data retrieved')
-            return
+    try:
+        dumping_data = fetch_dumping_data(login_data.session, login_data.post_headers, config.DATE_FROM, config.DATE_TO)
+    except DataFetchError as e:
+        logger.error(f'Data fetching failed: {e}', exc_info=True)
+    except ValueError as e:
+        logger.error(f'Incorrect JSON values: {e}', exc_info=True)
 
-        print_dumping_data(dumping_data)
+    if dumping_data is None:
+        print('No data retrieved')
+        return
+
+    print_dumping_data(dumping_data)
 
 if __name__ == "__main__":
     main()

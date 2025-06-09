@@ -2,10 +2,15 @@ from config import config
 import pandas as pd
 
 def handle_default_printing(dumping_data):
+    """
+    Prints dumping data in default style with full records, as well as summarized table with sum of BIO and MKO dumpings.
+
+    Args:
+        dumping_data (DataFrame): Dumping data in pandas DataFrame object.
+    """
     print('Full data:')
     print(dumping_data)
 
-    print('Summarized data:')
     pivot_summary = dumping_data.pivot_table(
         values='quantity',
         index=None,
@@ -13,9 +18,17 @@ def handle_default_printing(dumping_data):
         aggfunc='sum',
         fill_value=0
     )
+
+    print('Summarized data:')
     print(pivot_summary)
 
 def handle_months_printing(dumping_data):
+    """
+    Prints dumping data in months style where each month has grouped BIO and MKO dumpings as well as calculated costs.
+
+    Args:
+        dumping_data (DataFrame): Dumping data in pandas DataFrame object.
+    """
     dumping_data['dumpedAtDate'] = pd.to_datetime(dumping_data['dumpedAtDate'])
     dumping_data['month'] = dumping_data['dumpedAtDate'].dt.to_period('M').astype(str)
 
@@ -76,6 +89,12 @@ def handle_months_printing(dumping_data):
     print(final_df)
 
 def handle_years_printing(dumping_data):
+    """
+    Prints dumping data in years style where each year has grouped BIO and MKO dumpings.
+
+    Args:
+        dumping_data (DataFrame): Dumping data in pandas DataFrame object.
+    """
     # Ensure date column is datetime
     dumping_data['dumpedAtDate'] = pd.to_datetime(dumping_data['dumpedAtDate'])
     
@@ -103,5 +122,6 @@ def handle_years_printing(dumping_data):
             pivot[col] = 0
 
     pivot.columns.name = None
+
     print("Years data:")
     print(pivot)

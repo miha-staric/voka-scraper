@@ -9,7 +9,3 @@ class AuthenticationError(ScraperError):
 class DataFetchError(ScraperError):
     """Raised when data fetching fails."""
     pass
-
-class ProcessingError(ScraperError):
-    """Raised when data processing fails."""
-    pass
