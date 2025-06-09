@@ -77,4 +77,8 @@ def login(chip_card_number: str, password: str, login_url: str) -> LoginResult:
         if response.status_code != 200:
             raise AuthenticationError(f'POST request problem, status returned: {response.status_code}')
 
+        error = json.loads(response.text)['props']['flash']['error']
+        if error is not None:
+            raise AuthenticationError(f'Login error: {error}')
+
         return LoginResult(session=session, post_headers=post_headers)

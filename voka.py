@@ -35,13 +35,16 @@ def main():
         login_data = login(config.CHIP_CARD_NUMBER, config.PASSWORD, config.LOGIN_URL)
     except AuthenticationError as e:
         logger.error(f'Login failed: {e}', exc_info=True)
+        return
 
     try:
         dumping_data = fetch_dumping_data(login_data.session, login_data.post_headers, config.DATE_FROM, config.DATE_TO)
     except DataFetchError as e:
         logger.error(f'Data fetching failed: {e}', exc_info=True)
+        return
     except ValueError as e:
         logger.error(f'Incorrect JSON values: {e}', exc_info=True)
+        return
 
     if dumping_data is None:
         print('No data retrieved')
