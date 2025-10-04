@@ -22,11 +22,12 @@ def parse_voka_json(json_data) -> pd.DataFrame:
   if 'props' not in json_data or 'dumpings' not in json_data['props']:
     raise DataFetchError('Response JSON missing required keys "props" or "dumpings"')
   dumpings = json_data['props']['dumpings']['dumpings']
-  if not isinstance(dumpings, list) or len(dumpings) == 0:
-    raise DataFetchError("'dumpings' must be a non-empty list")
 
   # Get the "dumpings" data and convert to a DataFrame
   dumpings_df = pd.DataFrame(json_data['props']['dumpings']['dumpings'])
+
+  if 'chipNumber' not in dumpings_df.columns:
+    return pd.DataFrame(columns=['chipNumber','quantity','fraction'])
 
   # Delete the chipNumber column
   dumpings_df.drop(columns=['chipNumber'], inplace=True)
