@@ -14,10 +14,10 @@ date_to             = "30.06.2025"
 mode                = "default" # default | months | years
 
 [ cost ]
-bio                 = 0.1335
-mko                 = 2.4809
-min_bio             = 1.068
-min_mko             = 14.8854
+bio                 = 0.1350
+mko                 = 2.5626
+min_bio             = 1.0800
+min_mko             = 15.3756
 
 [ logging ]
 level               = "INFO"
